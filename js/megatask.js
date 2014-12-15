@@ -11,13 +11,28 @@ var Megatask = function() {
     };
     var loadTasks = function() {
       if (supportsStorage() && localStorage.tasks) {
+        // localStorage.tasks will look something like this...
+        // '[{"name": "task 1", "completed": "false"}]'
         self.tasks = JSON.parse(localStorage.tasks);
+        for (var i=0; i < self.tasks.length; i++) {
+          var taskToAppend = self.tasks[i];
+          $('#tasks').append(createListItem(taskToAppend));
+        }
       }
     }
-    var addTask = function(taskName) {
-        self.tasks.push(taskName);
-        $('#tasks').append('<li class="list-group-item">' + taskName + '</li>');
+    var addTask = function(taskName, taskCompleted) {
+        taskCompleted = !!taskCompleted;
+        var newTask = {
+          name: taskName,
+          completed: taskCompleted
+        };
+        self.tasks.push(newTask);
+        var newItem = createListItem(newTask);
+        $('#tasks').append(newItem);
         saveTasks();
+    };
+    var createListItem = function(task) {
+      return '<li class="list-group-item">' + task.name + '</li>'
     };
     var saveTasks = function() {
       if (supportsStorage()) {
