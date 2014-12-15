@@ -12,10 +12,17 @@
 </head>
 
 <body>
-  <div class = "well col-sm-6 col-sm-offset-3 col-xs-12">
-    <h1>Megatask</h1>
-    <form role="form" id="new_task" class"form-inline">
 
+  <div class ="well col-sm-7 col-sm-offset-3 col-xs-12">
+    <h1>Megatask</h1>
+    <ol class="list-group" id="tasks"></ol>
+    <form role="form" id="new_task" class="form-inline">
+      <label>
+        <input type="text" name="task_name" class="form-control"
+        placeholder="Enter a task">
+        <input type="submit" value="Add task"
+        class="btn btn-sm btn-primary">
+      </label>
     </form>
   </div>
 
