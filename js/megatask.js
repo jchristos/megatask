@@ -10,7 +10,7 @@ var Megatask = function() {
       }
     };
     var loadTasks = function() {
-      if (supportsStorage()) {
+      if (supportsStorage() && localStorage.tasks) {
         self.tasks = JSON.parse(localStorage.tasks);
       }
     }
