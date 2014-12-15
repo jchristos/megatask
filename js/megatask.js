@@ -1,6 +1,7 @@
 var Megatask = function() {
   function Megatask() {
     this.tasks = [];
+    this.counter = 0;
     var self = this;
     var supportsStorage = function() {
       try {
@@ -21,15 +22,17 @@ var Megatask = function() {
       }
     }
     var addTask = function(taskName, taskCompleted) {
-        taskCompleted = !!taskCompleted;
-        var newTask = {
-          name: taskName,
-          completed: taskCompleted
-        };
-        self.tasks.push(newTask);
-        var newItem = createListItem(newTask);
-        $('#tasks').append(newItem);
-        saveTasks();
+      taskCompleted = !!taskCompleted;
+      self.counter++;
+      var newTask = {
+        id: self.counter,
+        name: taskName,
+        completed: taskCompleted
+      };
+      self.tasks.push(newTask);
+      var newItem = createListItem(newTask);
+      $('#tasks').append(newItem);
+      saveTasks();
     };
     var createListItem = function(task) {
       var deleteButton, editButton, buttonGroup, label;
@@ -38,7 +41,7 @@ var Megatask = function() {
       editButton = '<button class="btn btn-sm btn-success">edit</button>';
       buttonGroup = '<div class="btn-group">' + deleteButton +
         editButton + '</div>';
-      return '<li class="list-group-item"><div class="task">' +
+      return '<li class="list-group-item" id="task_' + task.id + '"><div class="task">' +
         label + buttonGroup + '</div></li>';
     };
     var saveTasks = function() {
@@ -52,6 +55,18 @@ var Megatask = function() {
       var field = $(this.elements.task_name);
       addTask(field.val());
       field.val('');
+    });
+    $('#tasks').on('click', 'button.btn-danger', function() {
+      var listItem = $(this).closest('li');
+      var id = listItem.attr('id');
+      id = id.substring(id.lastIndexOf('_') + 1);
+      for (var i=0; i < self.tasks.length; i++) {
+        if (self.tasks[i].id.toString() === id) {
+          self.tasks.splice(i, 1); // remove 1 item at index i
+        }
+      }
+      listItem.remove();
+      saveTasks();
     });
 
     loadTasks();
