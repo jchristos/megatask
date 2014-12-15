@@ -9,6 +9,11 @@ var Megatask = function() {
         return false;
       }
     };
+    var loadTasks = function() {
+      if (supportsStorage()) {
+        self.tasks = JSON.parse(localStorage.tasks);
+      }
+    }
     var addTask = function(taskName) {
         self.tasks.push(taskName);
         $('#tasks').append('<li class="list-group-item">' + taskName + '</li>');
@@ -26,6 +31,8 @@ var Megatask = function() {
       addTask(field.val());
       field.val('');
     });
+
+    loadTasks();
   }
   return Megatask;
 }();
