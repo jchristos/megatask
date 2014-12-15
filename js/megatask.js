@@ -32,7 +32,14 @@ var Megatask = function() {
         saveTasks();
     };
     var createListItem = function(task) {
-      return '<li class="list-group-item">' + task.name + '</li>'
+      var deleteButton, editButton, buttonGroup, label;
+      label = '<label>' + task.name + '</label>';
+      deleteButton = '<button class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i></button>';
+      editButton = '<button class="btn btn-sm btn-success">edit</button>';
+      buttonGroup = '<div class="btn-group">' + deleteButton +
+        editButton + '</div>';
+      return '<li class="list-group-item"><div class="task">' +
+        label + buttonGroup + '</div></li>';
     };
     var saveTasks = function() {
       if (supportsStorage()) {

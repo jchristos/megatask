@@ -1,0 +1,11 @@
+/* `.task` selector matches all elements with `class="task"` */
+.task {
+  display: block;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+.btn-group {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
