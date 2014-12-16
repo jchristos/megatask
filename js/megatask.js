@@ -98,16 +98,28 @@ var Megatask = function() {
       listItem.html(editForm);
     });
 
-    $('#tasks').on('submit', '.edit_task', function(e) {
-      e.preventDefault();
-      var listItem = getListItemFromButton(this);
-      var id = getTaskIdFromListItem(listItem);
+    var getTaskFromElement = function(element) {
+      var id = getTaskIdFromListItem(element);
       var task;
       for (var i=0; i < self.tasks.length; i++) {
         if (self.tasks[i].id.toString() === id) {
           task = self.tasks[i];
         }
       }
+      return task
+    };
+
+    $('#tasks').on('click', 'button.cancel', function(e) {
+      e.preventDefault();
+      var listItem = getListItemFromButton(this);
+      var task = getTaskFromElement(listItem);
+      listItem.replaceWith(createListItem(task));
+    });
+
+    $('#tasks').on('submit', '.edit_task', function(e) {
+      e.preventDefault();
+      var listItem = getListItemFromButton(this);
+      var task = getTaskFromElement(listItem);
       task.name = $(this).find('.task_name').val();
       saveTasks();
       listItem.replaceWith(createListItem(task));
