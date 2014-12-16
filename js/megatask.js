@@ -38,7 +38,7 @@ var Megatask = function() {
       var deleteButton, editButton, buttonGroup, label;
       label = '<label>' + task.name + '</label>';
       deleteButton = '<button class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i></button>';
-      editButton = '<button class="btn btn-sm btn-success">edit</button>';
+      editButton = '<button class="btn btn-sm btn-success edit">edit</button>';
       buttonGroup = '<div class="btn-group">' + deleteButton +
         editButton + '</div>';
       return '<li class="list-group-item" id="task_' + task.id + '"><div class="task">' +
@@ -50,16 +50,27 @@ var Megatask = function() {
       }
     };
 
+    var getListItemFromButton = function(button) {
+      return $(button).closest('li');
+    };
+
+    var getTaskIdFromListItem = function(listItem) {
+      var id = listItem.attr('id');
+      return id.substring(id.lastIndexOf('_') + 1);
+
+    };
+
     $('#new_task').submit(function(ev) {
       ev.preventDefault();
       var field = $(this.elements.task_name);
       addTask(field.val());
       field.val('');
+
     });
+
     $('#tasks').on('click', 'button.btn-danger', function() {
-      var listItem = $(this).closest('li');
-      var id = listItem.attr('id');
-      id = id.substring(id.lastIndexOf('_') + 1);
+      var listItem = getListItemFromButton(this);
+      var id = getTaskIdFromListItem(listItem);
       for (var i=0; i < self.tasks.length; i++) {
         if (self.tasks[i].id.toString() === id) {
           self.tasks.splice(i, 1); // remove 1 item at index i
@@ -67,6 +78,21 @@ var Megatask = function() {
       }
       listItem.remove();
       saveTasks();
+    });
+
+    $('#tasks').on('click', 'button.edit', function() {
+      var listItem = getListFromButton(this);
+      var id = getTaskIdFromListItem(listItem);
+      var editForm = $('.edit_task.hidden').clone();
+      var task;
+      for (var i=0; i < self.tasks.length; i++) {
+        if (self.tasks[i].id.toString() === id) {
+          task = self.tasks[i];
+        }
+      }
+      editForm.find('input.task_name').val(task.name)
+      editForm.removeClass('hidden');
+      listItem.html(editForm);
     });
 
     loadTasks();
