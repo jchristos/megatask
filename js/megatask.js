@@ -5,14 +5,16 @@ var Megatask = function() {
     var self = this;
     var supportsStorage = function() {
       try {
-        return 'localStorage' in window && window['localStorage'] != null;
+        return 'localStorage' in window &&
+        window['localStorage'] != null;
       } catch(e) {
         return false;
       }
     };
     var loadTasks = function() {
       if (supportsStorage() && localStorage.tasks) {
-        // localStorage.tasks will look something like this...
+        // localStorage.tasks will be a string, looking
+        // something like this...
         // '[{"name": "task 1", "completed": "false"}]'
         self.tasks = JSON.parse(localStorage.tasks);
         for (var i=0; i < self.tasks.length; i++) {
@@ -38,11 +40,11 @@ var Megatask = function() {
       var deleteButton, editButton, buttonGroup, label;
       label = '<label>' + task.name + '</label>';
       deleteButton = '<button class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i></button>';
-      editButton = '<button class="btn btn-sm btn-success edit">edit</button>';
+      editButton = '<button class="btn btn-sm btn-success edit">Edit</button>';
       buttonGroup = '<div class="btn-group">' + deleteButton +
-        editButton + '</div>';
+      editButton + '</div>';
       return '<li class="list-group-item" id="task_' + task.id + '"><div class="task">' +
-        label + buttonGroup + '</div></li>';
+      label + buttonGroup + '</div></li>';
     };
     var saveTasks = function() {
       if (supportsStorage()) {
@@ -57,7 +59,6 @@ var Megatask = function() {
     var getTaskIdFromListItem = function(listItem) {
       var id = listItem.attr('id');
       return id.substring(id.lastIndexOf('_') + 1);
-
     };
 
     $('#new_task').submit(function(ev) {
@@ -65,7 +66,6 @@ var Megatask = function() {
       var field = $(this.elements.task_name);
       addTask(field.val());
       field.val('');
-
     });
 
     $('#tasks').on('click', 'button.btn-danger', function() {
@@ -81,7 +81,7 @@ var Megatask = function() {
     });
 
     $('#tasks').on('click', 'button.edit', function() {
-      var listItem = getListFromButton(this);
+      var listItem = getListItemFromButton(this);
       var id = getTaskIdFromListItem(listItem);
       var editForm = $('.edit_task.hidden').clone();
       var task;
@@ -90,7 +90,7 @@ var Megatask = function() {
           task = self.tasks[i];
         }
       }
-      editForm.find('input.task_name').val(task.name)
+      editForm.find('input.task_name').val(task.name);
       editForm.removeClass('hidden');
       listItem.html(editForm);
     });

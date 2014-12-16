@@ -13,23 +13,34 @@
 </head>
 
 <body>
-
-  <div class ="well col-sm-7 col-sm-offset-3 col-xs-12">
+  <div class="well col-sm-7 col-sm-offset-3 col-xs-12">
     <h1>Megatask</h1>
-    <ol class="list-group" id="tasks"></ol>
+    <ol class="list-group" id="tasks">
+    </ol>
     <form role="form" id="new_task" class="form-inline">
       <label>
         <input type="text" name="task_name" class="form-control"
         placeholder="Enter a task">
-        <input type="submit" value="Add task"
+        <input type="submit" value="Add Task"
         class="btn btn-sm btn-primary">
       </label>
     </form>
   </div>
-  <form class="edit_task form-inline hidden">
+  <ol id="list-template" class="hidden">
+    <li class="list-group-item" id="task_{{ task.id }}">
+      <div class="task">
+        <label>{{ task.name }}</label>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i></button>
+          <button class="btn btn-sm btn-success edit">Edit</button>
+        </div>
+      </div>
+    </li>
+  </ol>
+  <form id="edit-form-template" class="edit_task form-inline hidden">
     <input type="text" class="task_name form-control">
-    <input type="submit" value="save" class="btn btn-sm btn-success">
-    <button class="btn btn-sm btn-default cancel">cancel</button>
+    <input type="submit" value="Save" class="btn btn-sm btn-success">
+    <button class="btn btn-sm btn-default cancel">Cancel</button>
   </form>
 
   <script src="js/jquery-2.1.1.js"></script>
