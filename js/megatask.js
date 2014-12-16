@@ -20,9 +20,12 @@ var Megatask = function() {
         for (var i=0; i < self.tasks.length; i++) {
           var taskToAppend = self.tasks[i];
           $('#tasks').append(createListItem(taskToAppend));
+          if (taskToAppend.id > self.counter) {
+            self.counter = taskToAppend.id;
+          }
         }
       }
-    }
+    };
     var addTask = function(taskName, taskCompleted) {
       taskCompleted = !!taskCompleted;
       self.counter++;
@@ -93,6 +96,21 @@ var Megatask = function() {
       editForm.find('input.task_name').val(task.name);
       editForm.removeClass('hidden');
       listItem.html(editForm);
+    });
+
+    $('#tasks').on('submit', '.edit_task', function(e) {
+      e.preventDefault();
+      var listItem = getListItemFromButton(this);
+      var id = getTaskIdFromListItem(listItem);
+      var task;
+      for (var i=0; i < self.tasks.length; i++) {
+        if (self.tasks[i].id.toString() === id) {
+          task = self.tasks[i];
+        }
+      }
+      task.name = $(this).find('.task_name').val();
+      saveTasks();
+      listItem.replaceWith(createListItem(task));
     });
 
     loadTasks();
