@@ -17,6 +17,9 @@ var Megatask = function() {
         // something like this...
         // '[{"name": "task 1", "completed": "false"}]'
         self.tasks = JSON.parse(localStorage.tasks);
+        self.tasks.sort(function(a, b) {
+          return a.position - b.position;
+        });
         for (var i=0; i < self.tasks.length; i++) {
           var taskToAppend = self.tasks[i];
           $('#tasks').append(createListItem(taskToAppend));
@@ -32,7 +35,8 @@ var Megatask = function() {
       var newTask = {
         id: self.counter,
         name: taskName,
-        completed: taskCompleted
+        completed: taskCompleted,
+        position: self.tasks.length + 1
       };
       self.tasks.push(newTask);
       var newItem = createListItem(newTask);
@@ -53,6 +57,7 @@ var Megatask = function() {
     };
     var saveTasks = function() {
       if (supportsStorage()) {
+        updatePositions();
         localStorage.tasks = JSON.stringify(self.tasks);
       }
     };
@@ -111,6 +116,14 @@ var Megatask = function() {
       return task;
     };
 
+    var updatePositions = function() {
+      var orderedElementIds = $('#tasks').sortable('toArray');
+      $.each(orderedElementIds, function(index, elementId) {
+        var task = getTaskFromElement($('#' + elementId));
+        task.position = index + 1;
+      });
+    };
+
     $('#tasks').on('click', 'button.cancel', function(e) {
       e.preventDefault();
       var listItem = getListItemFromButton(this);
@@ -135,6 +148,9 @@ var Megatask = function() {
       saveTasks();
     });
 
+    $('#tasks').sortable({
+      update: function() { saveTasks(); }
+    });
     loadTasks();
   }
   return Megatask;
