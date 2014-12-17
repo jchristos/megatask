@@ -40,14 +40,16 @@ var Megatask = function() {
       saveTasks();
     };
     var createListItem = function(task) {
-      var deleteButton, editButton, buttonGroup, label;
-      label = '<label>' + task.name + '</label>';
+      var deleteButton, editButton, buttonGroup, label, checkbox;
+      checkbox = '<input type="checkbox"' + (task.completed ? ' checked' : '') + '>';
+      label = '<label class="checkbox-inline">' + checkbox + ' ' +
+        task.name + '</label>';
       deleteButton = '<button class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i></button>';
       editButton = '<button class="btn btn-sm btn-success edit">Edit</button>';
       buttonGroup = '<div class="btn-group">' + deleteButton +
-      editButton + '</div>';
-      return '<li class="list-group-item" id="task_' + task.id + '"><div class="task">' +
-      label + buttonGroup + '</div></li>';
+        editButton + '</div>';
+      return '<li class="list-group-item' + (task.completed ? ' completed' : '') + '" id="task_' + task.id + '"><div class="task">' +
+        label + buttonGroup + '</div></li>';
     };
     var saveTasks = function() {
       if (supportsStorage()) {
@@ -60,7 +62,7 @@ var Megatask = function() {
     };
 
     var getTaskIdFromListItem = function(listItem) {
-      var id = listItem.attr('id');
+      var id = $(listItem).attr('id');
       return id.substring(id.lastIndexOf('_') + 1);
     };
 
@@ -106,7 +108,7 @@ var Megatask = function() {
           task = self.tasks[i];
         }
       }
-      return task
+      return task;
     };
 
     $('#tasks').on('click', 'button.cancel', function(e) {
@@ -123,6 +125,14 @@ var Megatask = function() {
       task.name = $(this).find('.task_name').val();
       saveTasks();
       listItem.replaceWith(createListItem(task));
+    });
+
+    $('#tasks').on('click', ':checkbox', function(e) {
+      var listItem = getListItemFromButton(this);
+      var task = getTaskFromElement(listItem);
+      task.completed = e.currentTarget.checked;
+      listItem.toggleClass('completed');
+      saveTasks();
     });
 
     loadTasks();

@@ -9,3 +9,6 @@
   top: 8px;
   right: 8px;
 }
+.completed label {
+  text-decoration: line-through;
+}
